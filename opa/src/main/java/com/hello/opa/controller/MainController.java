@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.hello.opa.domain.Exercise;
 import com.hello.opa.domain.User;
 import com.hello.opa.repos.ExerciseRepository;
+import com.hello.opa.thymeleaf.ExerciseForm;
 
 @Controller
 public class MainController {
@@ -28,59 +29,61 @@ public class MainController {
 //		model.addAttribute("name", name);
 //		return "greeting";
 //	}
-	
+
 	@GetMapping("/")
-    public String greeting(Map<String, Object> model) {
-        return "greeting";
-    }
+	public String greeting(Map<String, Object> model) {
+		return "greeting";
+	}
 
 	@GetMapping("/main")
-    public String main(Model model) {
-        Iterable<Exercise> exercises = exerciseRepository.findAll();
+	public String main(Model model) {
+		Iterable<Exercise> exercises = exerciseRepository.findAll();
 
-        model.addAttribute("exercises", exercises);
+		model.addAttribute("exercises", exercises);
 
-        return "main";
-    }
+		return "main";
+	}
+
 	@GetMapping("/addExercise")
     public String addEx(Model model) {
-        
-
+		
+		    model.addAttribute("exerciseForm", new ExerciseForm());
+		  
         return "addExercise";
     }
-	
+
 	@PostMapping("/addExercise")
-    public String add(
-            @AuthenticationPrincipal User user,
-            @RequestParam String title,
-            @RequestParam String answer,
-            @RequestParam String task, Model model
-    ) {
-        Exercise exercise = new Exercise(title, task, user, answer);
+	public String add(@AuthenticationPrincipal User user,
+			@ModelAttribute(name = "exerciseForm") ExerciseForm exerciseForm, Model model) {
 
-        exerciseRepository.save(exercise);
+		String title = exerciseForm.getTitle();
+		String task = exerciseForm.getTask();
+		String answer = exerciseForm.getAnswer();
+		Exercise exercise = new Exercise(title, task, user, answer);
 
-        Iterable<Exercise> exercises = exerciseRepository.findAll();
+		exerciseRepository.save(exercise);
 
-        model.addAttribute("exercises", exercises);
+		Iterable<Exercise> exercises = exerciseRepository.findAll();
 
-        return "main";
-    }
+		model.addAttribute("exercises", exercises);
+
+		return "main";
+	}
 //	@GetMapping("/add")
 //	public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
 //			Model model) {
 //		model.addAttribute("name", name);
 //		return "addUser";
 //	}
-	
+
 //	@PostMapping("/add")
 //	public String add(@RequestParam String name,@RequestParam String email, Map<String, Object> model) {
 //		User user = new User(name, email);
 //		userRepository.save(user);
 //		return "addUser";
 //		
-		
-	//}
+
+	// }
 //	@PostMapping("/filter")
 //	public String filter(@RequestParam String filter, Map<String, Object> model) {
 //		List<User> users = (List<User>) userRepository.findByUsername(filter);
@@ -88,6 +91,6 @@ public class MainController {
 //		return "filter";
 //		
 //		
-	//}
+	// }
 
 }
