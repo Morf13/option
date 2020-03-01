@@ -25,6 +25,7 @@ public class Exercise {
 	}
 	private String title;
 	private String task;
+	private String fileName;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -42,11 +43,10 @@ public class Exercise {
     }
 
 
-	public Exercise(String title, String task, User author, String answer) {
+	public Exercise(String title, User author) {
 		this.title = title;
-		this.task = task;
 		this.author = author;
-		this.answer = answer;
+		
 	}
 
 	public String getTask() {
@@ -66,5 +66,13 @@ public class Exercise {
 	}
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }
