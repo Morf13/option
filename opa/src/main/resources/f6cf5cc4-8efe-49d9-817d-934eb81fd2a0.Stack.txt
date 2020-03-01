@@ -1,0 +1,47 @@
+стек технологий: Java 8, EJB, Hibernate, WildFly, Hazelcast, PostgreSQL
+
+орошее владение Java и опыт объектно-ориентированного программирования. Знание основных библиотек и шаблонов проектирования.
+
+Опыт работы со Spring стеком (Spring Boot, Spring Data, Spring MVC)
+
+· Уверенное знание Java Core
+
+· Умение работать с любой SQL базой данных
+
+· Знание алгоритмов и структур данных и умение их применять
+
+· Умение понятно и аргументированно доносить свои идеи до других
+
+Уверенно знаете алгоритмы и структуры данных
+
+Имеете представление о паттернах проектирования и основах ООП
+
+Имеете опыт разработки на Java в учебных или домашних проектах
+
+Знакомы с Java Core (collections, utils, exceptions, concurrency как плюс)
+
+Знаете SQL на уровне написания простых запросов
+Hibernate в связке с Postgres;
+Активное участие в жизни сообщества (JPoint, Jocker, Open Source Contribution);
+
+PostgreSQL (SpringData, Hibernate).
+Frontend: Angular8 .
+
+Gradle, Docker.
+
+нание Java SE: Core, Multithreading
+Опыт использования JDBC и ORM (Hibernate, Eclipselink, ...)
+Опыт работы с СУБД
+Опыт использования Sping Framework
+
+Java 8, Spring Framework 4.x (Core, Web, Integration), Oracle; IBM MQ, WebSphere.
+
+Требования к вам:
+
+от 3 лет в java-разработке
+Java 8 (Core, Concurrency, Collection, Lambda, Stream API)
+Spring Framework
+JMS
+SQL (в т.ч. понимание принципов оптимизации запросов)
+Maven/Gradle
+Git
