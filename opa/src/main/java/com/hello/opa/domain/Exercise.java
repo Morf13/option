@@ -31,8 +31,10 @@ public class Exercise {
 	}
 	@NotBlank(message = "Please add the Title") 
 	@Length(max = 255, message = "Title too long")
+	
 	private String title;
 	private String task;
+	@NotBlank(message = "Please add Excel file") 
 	private String fileName;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
