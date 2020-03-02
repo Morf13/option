@@ -8,6 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
+
+
+
 
 @Entity
 @Table(name = "exercises")
@@ -23,6 +29,8 @@ public class Exercise {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	@NotBlank(message = "Please add the Title") 
+	@Length(max = 255, message = "Title too long")
 	private String title;
 	private String task;
 	private String fileName;

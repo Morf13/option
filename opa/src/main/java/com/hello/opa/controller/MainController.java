@@ -4,12 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,16 +59,29 @@ public class MainController {
 
 	@GetMapping("/addExercise")
 	public String addEx(Model model) {
-		model.addAttribute("exerciseForm", new Exercise());
+		Iterable<Exercise> exercises = exerciseRepository.findAll();
+
+		model.addAttribute("exercises", exercises);
 
 		return "addExercise";
 	}
 
 	@PostMapping("/addExercise")
-	public String add(@AuthenticationPrincipal User user, @RequestParam String title, 
-			@RequestParam("file") MultipartFile file, Model model) throws IOException {
+	public String add(@AuthenticationPrincipal User user, 
+			@Valid Exercise exercise, 
+			BindingResult bindingResult,
+			Model model,
+			@RequestParam("file") MultipartFile file 
+			
+			) throws IOException {
+		exercise.setAuthor(user);
+		if(bindingResult.hasErrors()) {
+				Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
+				model.mergeAttributes(errorMap);
+				model.addAttribute("exercise", exercise);
+		} else {
 
-		Exercise exercise = new Exercise(title, user);
+		
 
 		
 		
@@ -80,13 +99,16 @@ public class MainController {
 
             exercise.setFileName(resultFilename);
         }
+		 model.addAttribute("exercise", null);
+
 		exerciseRepository.save(exercise);
+		}
 
 		Iterable<Exercise> exercises = exerciseRepository.findAll();
 
 		model.addAttribute("exercises", exercises);
 
-		return "main";
+		return "addExercise";
 	}
 //	@GetMapping("/add")
 //	public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
@@ -94,6 +116,8 @@ public class MainController {
 //		model.addAttribute("name", name);
 //		return "addUser";
 //	}
+
+	
 
 //	@PostMapping("/add")
 //	public String add(@RequestParam String name,@RequestParam String email, Map<String, Object> model) {
