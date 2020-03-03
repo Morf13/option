@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import com.hello.opa.domain.Exercise;
 
 
-public interface ExerciseRepository extends CrudRepository <Exercise, Integer> {
+public interface ExerciseRepository extends CrudRepository <Exercise, Long> {
 
 }

@@ -1,11 +1,9 @@
-<#import "parts/common.ftlh" as c> 
+<#import "parts/common.ftlh" as c>
 
 <@c.page>
 
+<#include "parts/exerciseEdit.ftlh" />
 
-<#list exercises as exercise>
-<div class = "card my-3" style="width: 18rem">
-	<b>${exercise.title}</b>
+<#include "parts/exerciseList.ftlh" />
 
-</div>
-<#else> No exercises </#list> </@c.page>
+</@c.page>

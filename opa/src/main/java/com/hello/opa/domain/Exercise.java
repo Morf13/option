@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.Length;
 public class Exercise {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	public String getTitle() {
 		return title;
 	}
@@ -33,14 +33,12 @@ public class Exercise {
 	@Length(max = 255, message = "Title too long")
 	
 	private String title;
-	private String task;
 	@NotBlank(message = "Please add Excel file") 
 	private String fileName;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
 	private User author;
-	private String answer;
 	
 	public Exercise() {
 		
@@ -59,23 +57,21 @@ public class Exercise {
 		
 	}
 
-	public String getTask() {
-		return task;
-	}
-	public void setTask(String task) {
-		this.task = task;
-	}
+	
 	public User getAuthor() {
 		return author;
 	}
 	public void setAuthor(User author) {
 		this.author = author;
 	}
-	public String getAnswer() {
-		return answer;
+	
+
+	public Long getId() {
+		return id;
 	}
-	public void setAnswer(String answer) {
-		this.answer = answer;
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getFileName() {

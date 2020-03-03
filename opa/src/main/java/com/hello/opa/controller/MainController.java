@@ -3,6 +3,7 @@ package com.hello.opa.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -14,10 +15,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,6 +112,8 @@ public class MainController {
 		model.addAttribute("exercises", exercises);
 
 		return "addExercise";
+		
+		
 	}
 //	@GetMapping("/add")
 //	public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
@@ -135,5 +140,46 @@ public class MainController {
 //		
 //		
 	// }
+	
+	 @GetMapping("/user-exercises/{user}")
+	    public String userMessges(
+	            @AuthenticationPrincipal User currentUser,
+	            @PathVariable User user,
+	            Model model,
+	            @RequestParam(required = false) Exercise exercise
+	    ) {
+	        Set<Exercise> exercises = user.getExercises();
 
-}
+	        model.addAttribute("exercises", exercises);
+	        model.addAttribute("exercise", exercise);
+	        model.addAttribute("isCurrentUser", currentUser.equals(user));
+
+	        return "userExercises";
+	    }
+
+	    @PostMapping("/user-exercises/{user}")
+	    public String updateMessage(
+	            @AuthenticationPrincipal User currentUser,
+	            @PathVariable Long user,
+	            @RequestParam("id") Exercise exercise,
+	            @RequestParam("title") String title,
+	            @RequestParam("file") MultipartFile file
+	    ) throws IOException {
+	        if (exercise.getAuthor().equals(currentUser)) {
+	            if (!StringUtils.isEmpty(title)) {
+	            	exercise.setTitle(title);
+	            }
+
+	            if (!StringUtils.isEmpty(file)) {
+	            	exercise.getFileName();
+	            }
+
+	            //saveFile(exercise, file);
+
+	            exerciseRepository.save(exercise);
+	        }
+
+	        return "redirect:/user-exercises/" + user;
+	    }
+	}
+

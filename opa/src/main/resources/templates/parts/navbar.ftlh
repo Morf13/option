@@ -20,6 +20,11 @@
       <li class="nav-item">
         <a class="nav-link" href="/main">Exercises</a>
       </li>
+      <#if user??>
+      <li class="nav-item">
+        <a class="nav-link" href="/user-exercises/${currentUserId}">My Exercises</a>
+      </li>
+      </#if>
       <li class="nav-item">
         <a class="nav-link" href="/addExercise">Add Exercise</a>
       </li>
