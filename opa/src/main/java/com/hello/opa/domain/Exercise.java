@@ -33,7 +33,7 @@ public class Exercise {
 	@Length(max = 255, message = "Title too long")
 	
 	private String title;
-	@NotBlank(message = "Please add Excel file") 
+	//@NotBlank(message = "Please add Excel file") 
 	private String fileName;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

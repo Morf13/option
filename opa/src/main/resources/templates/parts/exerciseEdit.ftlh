@@ -1,9 +1,13 @@
+
+
+
 <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-    Exercise editor
+    <#if exercise??>Exercise editor<#else>Add exercise</#if>
 </a>
+
 <div class="collapse <#if exercise??>show</#if>" id="collapseExample">
     <div class="form-group mt-3">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" action = "/addExercise" enctype="multipart/form-data">
             <div class="form-group">
                 <input type="text" class="form-control ${(titleError??)?string('is-invalid', '')}"
                        value="<#if exercise??>${exercise.title}</#if>" name="title" placeholder="Exercise title" />
@@ -27,8 +31,9 @@
                 
             </div>
             <input type="hidden" name="_csrf" value="${_csrf.token}" />
+             <input type="hidden" name="id" value="<#if exercise??>${exercise.id}</#if>" />
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save exercise</button>
+                <button type="submit" class="btn btn-primary"><#if exercise??>Save exercise<#else>Add exercise</#if></button>
             </div>
         </form>
     </div>

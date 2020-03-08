@@ -61,6 +61,10 @@ public class User implements UserDetails {
 	public boolean isAdmin() {
 		return roles.contains(Role.ADMIN);
 	}
+	
+	public boolean isTeacher() {
+		return roles.contains(Role.TEACHER);
+	}
 
 	public Long getId() {
 		return id;

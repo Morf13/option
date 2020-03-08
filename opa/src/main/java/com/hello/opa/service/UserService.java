@@ -1,5 +1,8 @@
 package com.hello.opa.service;
 
+import java.util.Collections;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,9 +14,6 @@ import org.springframework.util.StringUtils;
 import com.hello.opa.domain.Role;
 import com.hello.opa.domain.User;
 import com.hello.opa.repos.UserRepository;
-
-import java.util.Collections;
-import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to Sweater. Please, visit next link: http://localhost:8080/activate/%s",
+                            "Welcome to Option. Please, visit next link: http://localhost:8080/activate/%s",
                     user.getUsername(),
                     user.getActivationCode()
             );

@@ -17,17 +17,21 @@
         <a class="nav-link" href="/user">User List</a>
       </li>
       </#if>
+      <#if isTeacher>
+      <li class="nav-item">
+        <a class="nav-link" href="/teacher-pupils">My pupils</a>
+      </li>
+      </#if>
+       <#if user??>
       <li class="nav-item">
         <a class="nav-link" href="/main">Exercises</a>
       </li>
-      <#if user??>
+     
       <li class="nav-item">
         <a class="nav-link" href="/user-exercises/${currentUserId}">My Exercises</a>
       </li>
+      
       </#if>
-      <li class="nav-item">
-        <a class="nav-link" href="/addExercise">Add Exercise</a>
-      </li>
       </ul>
       <div class="navbar-text mr-3">${name}</div>
       <div><@l.logout /></div>
