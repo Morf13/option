@@ -42,19 +42,18 @@ import com.hello.opa.service.MyCell;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 @Controller
 public class ExerciseController {
 
-	@Autowired 
+	@Autowired
 	private ExerciseRepository exerciseRepository;
 
 	@Value("${upload.path}")
 	private String uploadPath;
-	
+
 	@Autowired
 	ExerciseService exerciseService;
-	
+
 	@GetMapping("/")
 	public String greeting(Map<String, Object> model) {
 		return "greeting";
@@ -62,8 +61,8 @@ public class ExerciseController {
 
 	@GetMapping("/main")
 	public String main(Model model,
-			@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
-		
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+
 		Page<Exercise> page = exerciseService.exerciseList(pageable);
 
 		model.addAttribute("page", page);
@@ -74,33 +73,32 @@ public class ExerciseController {
 
 	@GetMapping("/addExercise")
 	public String addEx(Model model) {
-		Iterable<Exercise> exercises = exerciseRepository.findAll();
-
-		model.addAttribute("exercises", exercises);
-		
 
 		return "addExercise";
 	}
 
 	@PostMapping("/addExercise")
 	public String add(@AuthenticationPrincipal User user, @Valid Exercise exercise, BindingResult bindingResult,
-			Model model, @RequestParam("file") MultipartFile file
+			Model model, @RequestParam("file") MultipartFile file, @RequestParam Map<String, String> form
 
 	) throws IOException {
-		exercise.setAuthor(user);
-		if (bindingResult.hasErrors()) {
-			Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
-			model.mergeAttributes(errorMap);
-			model.addAttribute("exercise", exercise);
-		} else {
-			saveFile(exercise, file);
-			model.addAttribute("exercise", null);
-
-			exerciseRepository.save(exercise);
-		}
-
-		return "redirect:/user-exercises/" + user.getId();
-
+//		exercise.setAuthor(user);
+//		exercise.setType(form.get("type"));
+//		if (bindingResult.hasErrors()) {
+//			Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
+//			model.mergeAttributes(errorMap);
+//			model.addAttribute("exercise", exercise);
+//			return "addExercise";
+//		} else {
+//			saveFile(exercise, file);
+//			model.addAttribute("exercise", null);
+//
+//			exerciseRepository.save(exercise);
+//		}
+//
+//		return "redirect:/user-exercises/" + user.getId();
+		model.addAttribute("check", form);
+		return "check";
 	}
 
 	private void saveFile(@Valid Exercise exercise, @RequestParam("file") MultipartFile file) throws IOException {
@@ -120,10 +118,10 @@ public class ExerciseController {
 		}
 	}
 
-
 	@GetMapping("/user-exercises/{user}")
-	public String userMessges(@AuthenticationPrincipal User currentUser, @PathVariable User user, Model model,
-			@RequestParam(required = false) Exercise exercise, @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+	public String userExercises(@AuthenticationPrincipal User currentUser, @PathVariable User user, Model model,
+			@RequestParam(required = false) Exercise exercise,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Exercise> page = exerciseService.exerciseListForUser(pageable, currentUser, user);
 
 		model.addAttribute("page", page);
@@ -135,14 +133,13 @@ public class ExerciseController {
 	}
 
 	@PostMapping("/user-exercises/{user}")
-	public String updateMessage(@AuthenticationPrincipal User currentUser, @PathVariable Long user,
+	public String updateExercise(@AuthenticationPrincipal User currentUser, @PathVariable Long user,
 			@RequestParam("id") Exercise exercise, @RequestParam("title") String title,
 			@RequestParam("file") MultipartFile file) throws IOException {
 		if (exercise.getAuthor().equals(currentUser)) {
 			if (!StringUtils.isEmpty(title)) {
 				exercise.setTitle(title);
 			}
-
 
 			saveFile(exercise, file);
 
@@ -151,29 +148,26 @@ public class ExerciseController {
 
 		return "redirect:/user-exercises/" + user;
 	}
-	
+
 	@GetMapping("/exercise/{exercise}")
 	public String exercise(@PathVariable Exercise exercise, Model model) throws IOException {
 		ArrayList<MultipleChoice> data = exerciseService.getExercise(exercise.getId());
 		model.addAttribute("exercise", data);
-		
+		model.addAttribute("exerciseTitle", exercise.getTitle());
 
-		return "exercise";
+		return "multiple";
 	}
-	
+
 	@PostMapping("/exercise/{exercise}")
-	public String checkExercise(@PathVariable Exercise exercise, Model model,@RequestParam Map<String, String> form) throws IOException {
-		
-		
+	public String checkExercise(@PathVariable Exercise exercise, Model model, @RequestParam Map<String, String> form)
+			throws IOException {
+
 		ArrayList<MultipleChoice> data = exerciseService.getExercise(exercise.getId());
 		model.addAttribute("exercise", data);
-		
-		double result  = exerciseService.checkExercise(form, data);
+		model.addAttribute("exerciseTitle", exercise.getTitle());
+		double result = exerciseService.checkExercise(form, data);
 		model.addAttribute("result", result);
-		return "exercise";
-	}
-	
-	
+		return "multiple";
 	}
 
-
+}

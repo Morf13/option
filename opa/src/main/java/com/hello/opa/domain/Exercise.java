@@ -36,6 +36,16 @@ public class Exercise {
 	//@NotBlank(message = "Please add Excel file") 
 	private String fileName;
 	
+	@NotBlank(message = "Please choose Exercise type")
+	private String typeOfTask;
+	
+	public String getType() {
+		return typeOfTask;
+	}
+
+	public void setType(String type) {
+		this.typeOfTask = type;
+	}
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
 	private User author;

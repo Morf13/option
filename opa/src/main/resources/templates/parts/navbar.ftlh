@@ -26,6 +26,9 @@
       <li class="nav-item">
         <a class="nav-link" href="/main">Exercises</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/addExercise">Add Exercise</a>
+      </li>
      
       <li class="nav-item">
         <a class="nav-link" href="/user-exercises/${currentUserId}">My Exercises</a>

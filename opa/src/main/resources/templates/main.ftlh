@@ -2,8 +2,6 @@
 
 <@c.page>
 
-<#include "parts/exerciseEdit.ftlh" />
-
 <#include "parts/exerciseList.ftlh" />
 
 </@c.page>
