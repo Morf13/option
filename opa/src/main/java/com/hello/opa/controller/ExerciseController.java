@@ -36,6 +36,7 @@ import com.hello.opa.domain.Exercise;
 import com.hello.opa.domain.User;
 import com.hello.opa.repos.ExerciseRepository;
 import com.hello.opa.service.ExerciseService;
+import com.hello.opa.service.Gap;
 import com.hello.opa.service.MultipleChoice;
 import com.hello.opa.service.MyCell;
 
@@ -82,23 +83,23 @@ public class ExerciseController {
 			Model model, @RequestParam("file") MultipartFile file, @RequestParam Map<String, String> form
 
 	) throws IOException {
-//		exercise.setAuthor(user);
-//		exercise.setType(form.get("type"));
-//		if (bindingResult.hasErrors()) {
-//			Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
-//			model.mergeAttributes(errorMap);
-//			model.addAttribute("exercise", exercise);
-//			return "addExercise";
-//		} else {
-//			saveFile(exercise, file);
-//			model.addAttribute("exercise", null);
-//
-//			exerciseRepository.save(exercise);
-//		}
-//
-//		return "redirect:/user-exercises/" + user.getId();
-		model.addAttribute("check", form);
-		return "check";
+		exercise.setAuthor(user);
+		exercise.setType(form.get("type"));
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
+			model.mergeAttributes(errorMap);
+			model.addAttribute("exercise", exercise);
+			return "addExercise";
+		} else {
+			saveFile(exercise, file);
+			model.addAttribute("exercise", null);
+
+			exerciseRepository.save(exercise);
+		}
+
+		return "redirect:/user-exercises/" + user.getId();
+//		model.addAttribute("check", form);
+//		return "check";
 	}
 
 	private void saveFile(@Valid Exercise exercise, @RequestParam("file") MultipartFile file) throws IOException {
@@ -149,25 +150,56 @@ public class ExerciseController {
 		return "redirect:/user-exercises/" + user;
 	}
 
-	@GetMapping("/exercise/{exercise}")
-	public String exercise(@PathVariable Exercise exercise, Model model) throws IOException {
-		ArrayList<MultipleChoice> data = exerciseService.getExercise(exercise.getId());
+	@GetMapping("/exercise/mchoice/{exercise}")
+	public String multipleChoice(@PathVariable Exercise exercise, Model model) throws IOException {
+		ArrayList<MultipleChoice> data = exerciseService.getMultipleChoice(exerciseService.getExercise(exercise.getId()));
 		model.addAttribute("exercise", data);
 		model.addAttribute("exerciseTitle", exercise.getTitle());
+		model.addAttribute("size", data.size());
 
 		return "multiple";
 	}
 
-	@PostMapping("/exercise/{exercise}")
-	public String checkExercise(@PathVariable Exercise exercise, Model model, @RequestParam Map<String, String> form)
+	@PostMapping("/exercise/mchoice/{exercise}")
+	public String checkMultipleChoice(@PathVariable Exercise exercise, Model model, @RequestParam Map<String, String> form)
 			throws IOException {
 
-		ArrayList<MultipleChoice> data = exerciseService.getExercise(exercise.getId());
+		ArrayList<MultipleChoice> data = exerciseService.getMultipleChoice(exerciseService.getExercise(exercise.getId()));
 		model.addAttribute("exercise", data);
 		model.addAttribute("exerciseTitle", exercise.getTitle());
-		double result = exerciseService.checkExercise(form, data);
+		model.addAttribute("size", data.size());
+		double result = exerciseService.checkMultipleChoice(form, data);
 		model.addAttribute("result", result);
 		return "multiple";
+		
+	}
+	
+	
+	@GetMapping("/exercise/gap/{exercise}")
+	public String gap(@PathVariable Exercise exercise, Model model) throws IOException {
+		ArrayList<Gap> data = exerciseService.getGap(exerciseService.getExercise(exercise.getId()));
+		model.addAttribute("exercise", data);
+		model.addAttribute("exerciseTitle", exercise.getTitle());
+		model.addAttribute("size", data.size());
+
+		return "gap";
+	}
+	
+	@PostMapping("/exercise/gap/{exercise}")
+	public String checkGap(@PathVariable Exercise exercise, Model model, @RequestParam Map<String, String> form)
+			throws IOException {
+
+		ArrayList<Gap> data = exerciseService.getGap(exerciseService.getExercise(exercise.getId()));
+		model.addAttribute("exercise", data);
+		model.addAttribute("exerciseTitle", exercise.getTitle());
+		model.addAttribute("size", data.size());
+		double result = exerciseService.checkGap(form, data);
+		model.addAttribute("result", result);
+		return "gap";
+//		
+//		model.addAttribute("check", form);
+//		return "check";
+		
 	}
 
 }

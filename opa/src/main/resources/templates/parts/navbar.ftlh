@@ -19,20 +19,28 @@
       </#if>
       <#if isTeacher>
       <li class="nav-item">
-        <a class="nav-link" href="/teacher-pupils">My pupils</a>
+        <a class="nav-link" href="/teacher-pupils/${currentUserId}">My pupils</a>
       </li>
-      </#if>
-       <#if user??>
-      <li class="nav-item">
-        <a class="nav-link" href="/main">Exercises</a>
+       <li class="nav-item">
+        <a class="nav-link" href="/teacher/add-pupils/${currentUserId}">Add Pupils</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/addExercise">Add Exercise</a>
       </li>
-     
       <li class="nav-item">
         <a class="nav-link" href="/user-exercises/${currentUserId}">My Exercises</a>
       </li>
+      </#if>
+       <#if user??>
+      <li class="nav-item">
+        <a class="nav-link" href="/main">All Exercises</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/pupil/exercises/${currentUserId}">My Exercises</a>
+      </li>
+      
+     
+      
       
       </#if>
       </ul>

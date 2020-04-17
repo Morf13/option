@@ -24,20 +24,38 @@ public class User implements UserDetails {
 
 	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Exercise> exercises;
+	private String activationCode;
 
-	public Set<Exercise> getExercises() {
-		return exercises;
-	}
-
-	public void setExercises(Set<Exercise> exercises) {
-		this.exercises = exercises;
-	}
+	@ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+	@Enumerated(EnumType.STRING)
+	private Set<Role> roles;
+	
+	@ManyToMany(targetEntity = Exercise.class, cascade = {CascadeType.ALL})
+    @JoinTable(name = "pupil_exercises", joinColumns = { @JoinColumn(name = "user_id") }, 
+                       inverseJoinColumns = { @JoinColumn(name = "exercise_id") })
+    private Set<Exercise> exercisesTodo;
+	
+	@ManyToMany(targetEntity = User.class, cascade = {CascadeType.ALL})
+    @JoinTable(name = "pupil_teacher", joinColumns = { @JoinColumn(name = "teacher_id") }, 
+                       inverseJoinColumns = { @JoinColumn(name = "pupil_id") })
+    private Set<User> pupils;
+	
+	@ManyToMany(targetEntity = User.class, cascade = {CascadeType.ALL})
+    @JoinTable(name = "teacher_pupil", joinColumns = { @JoinColumn(name = "pupil_id") }, 
+                       inverseJoinColumns = { @JoinColumn(name = "teacher_id") })
+    private Set<User> teachers;
+	
 
 	private boolean active;
 
 	@Email(message = "Email is not correct")
 	@NotBlank(message = "Enter email")
 	private String email;
+	
+	public User() {
+
+	}
 	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,17 +69,18 @@ public class User implements UserDetails {
 
         return Objects.hash(id);
     }
-	private String activationCode;
-
-	@ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
-	@Enumerated(EnumType.STRING)
-	private Set<Role> roles;
+	
 
 	public boolean isAdmin() {
 		return roles.contains(Role.ADMIN);
 	}
-	
+	public Set<Exercise> getExercises() {
+		return exercises;
+	}
+
+	public void setExercises(Set<Exercise> exercises) {
+		this.exercises = exercises;
+	}
 	public boolean isTeacher() {
 		return roles.contains(Role.TEACHER);
 	}
@@ -70,9 +89,7 @@ public class User implements UserDetails {
 		return id;
 	}
 
-	public User() {
-
-	}
+	
 
 	public void setId(Long id) {
 		this.id = id;
@@ -150,5 +167,24 @@ public class User implements UserDetails {
 	public void setActivationCode(String activationCode) {
 		this.activationCode = activationCode;
 	}
+	public Set<Exercise> getExercisesTodo() {
+		return exercisesTodo;
+	}
+	public void setExercisesTodo(Set<Exercise> exercisesTodo) {
+		this.exercisesTodo = exercisesTodo;
+	}
+	public Set<User> getPupils() {
+		return pupils;
+	}
+	public void setPupils(Set<User> pupils) {
+		this.pupils = pupils;
+	}
+	public Set<User> getTeachers() {
+		return teachers;
+	}
+	public void setTeachers(Set<User> teachers) {
+		this.teachers = teachers;
+	}
+	
 
 }

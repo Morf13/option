@@ -15,7 +15,9 @@ import com.hello.opa.domain.User;
 public interface ExerciseRepository extends CrudRepository <Exercise, Long> {
 	
 	Page<Exercise> findAll(Pageable pageable);
-@Query("from Exercise e where e.author = :author")
+	@Query("from Exercise e where e.author = :author")
 	Page<Exercise> findByUser(Pageable pageable, @Param("author") User author);
+	Exercise findById(long id);
+
 
 }

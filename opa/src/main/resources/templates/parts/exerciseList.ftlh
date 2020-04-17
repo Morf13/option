@@ -6,7 +6,7 @@
     <#list page.content as exercise>
         <div class="card my-3">
             <div class="m-2">
-                <a href="/exercise/${exercise.id}">${exercise.title}</a><br/>
+                <a href="/exercise/${exercise.getType()}/${exercise.id}">${exercise.title}</a><br/>
             </div>
             <div class="card-footer text-muted">
                 <a href="/user-exercises/${exercise.author.id}">${exercise.authorName}</a>
