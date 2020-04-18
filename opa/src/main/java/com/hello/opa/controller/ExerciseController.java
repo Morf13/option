@@ -2,6 +2,11 @@ package com.hello.opa.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +38,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hello.opa.domain.Exercise;
+import com.hello.opa.domain.Result;
 import com.hello.opa.domain.User;
 import com.hello.opa.repos.ExerciseRepository;
+import com.hello.opa.repos.ResultRepository;
 import com.hello.opa.service.ExerciseService;
 import com.hello.opa.service.Gap;
 import com.hello.opa.service.MultipleChoice;
@@ -51,6 +58,8 @@ public class ExerciseController {
 
 	@Value("${upload.path}")
 	private String uploadPath;
+	@Autowired
+	private ResultRepository resultRepo;
 
 	@Autowired
 	ExerciseService exerciseService;
@@ -152,7 +161,8 @@ public class ExerciseController {
 
 	@GetMapping("/exercise/mchoice/{exercise}")
 	public String multipleChoice(@PathVariable Exercise exercise, Model model) throws IOException {
-		ArrayList<MultipleChoice> data = exerciseService.getMultipleChoice(exerciseService.getExercise(exercise.getId()));
+		ArrayList<MultipleChoice> data = exerciseService
+				.getMultipleChoice(exerciseService.getExercise(exercise.getId()));
 		model.addAttribute("exercise", data);
 		model.addAttribute("exerciseTitle", exercise.getTitle());
 		model.addAttribute("size", data.size());
@@ -161,20 +171,26 @@ public class ExerciseController {
 	}
 
 	@PostMapping("/exercise/mchoice/{exercise}")
-	public String checkMultipleChoice(@PathVariable Exercise exercise, Model model, @RequestParam Map<String, String> form)
-			throws IOException {
+	public String checkMultipleChoice(@AuthenticationPrincipal User currentUser, @PathVariable Exercise exercise,
+			Model model, @RequestParam Map<String, String> form) throws IOException {
 
-		ArrayList<MultipleChoice> data = exerciseService.getMultipleChoice(exerciseService.getExercise(exercise.getId()));
+		ArrayList<MultipleChoice> data = exerciseService
+				.getMultipleChoice(exerciseService.getExercise(exercise.getId()));
 		model.addAttribute("exercise", data);
 		model.addAttribute("exerciseTitle", exercise.getTitle());
 		model.addAttribute("size", data.size());
 		double result = exerciseService.checkMultipleChoice(form, data);
 		model.addAttribute("result", result);
+		if (!currentUser.isTeacher()&&!currentUser.isAdmin() ) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			String now = LocalDateTime.now().format(formatter);
+			Result results = new Result(currentUser.getId(), exercise.getId(), (int) result, now,exercise.getTitle(),currentUser.getUsername());
+			resultRepo.save(results);
+		}
 		return "multiple";
-		
+
 	}
-	
-	
+
 	@GetMapping("/exercise/gap/{exercise}")
 	public String gap(@PathVariable Exercise exercise, Model model) throws IOException {
 		ArrayList<Gap> data = exerciseService.getGap(exerciseService.getExercise(exercise.getId()));
@@ -184,7 +200,7 @@ public class ExerciseController {
 
 		return "gap";
 	}
-	
+
 	@PostMapping("/exercise/gap/{exercise}")
 	public String checkGap(@PathVariable Exercise exercise, Model model, @RequestParam Map<String, String> form)
 			throws IOException {
@@ -199,7 +215,7 @@ public class ExerciseController {
 //		
 //		model.addAttribute("check", form);
 //		return "check";
-		
+
 	}
 
 }

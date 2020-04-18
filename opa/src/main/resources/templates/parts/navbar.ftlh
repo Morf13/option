@@ -28,15 +28,21 @@
         <a class="nav-link" href="/addExercise">Add Exercise</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="/teacher/results/${currentUserId}">My pupils results</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="/user-exercises/${currentUserId}">My Exercises</a>
       </li>
       </#if>
-       <#if user??>
+       <#if !isTeacher>
       <li class="nav-item">
         <a class="nav-link" href="/main">All Exercises</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/pupil/exercises/${currentUserId}">My Exercises</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/pupil/results/${currentUserId}">My results</a>
       </li>
       
      
